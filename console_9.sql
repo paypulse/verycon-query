@@ -1,27 +1,3 @@
-select *
-from BoardNotice;
-
-select *
-from BoardCategory;
-
-select
-     ROW_NUMBER() over ()
-from (
-select
-    bn.userIP,
-    bn.uid,
-    bn.boardType,
-    bc.name
-from BoardNotice as bn
-left join BoardCategory as bc on bn.boardCategoryUid = bc.uid
-where bn.boardType='FAQ')  as t;
-
-
-select *
-from BoardCategory;
-
-select *
-from BoardNotice;
 
 -- 1. 질문 하기 리스트 쿼리
 -- 검색 조건 : 기간, 페이징
@@ -40,10 +16,10 @@ where
     BN.boardType = 'FAQ'
     and BN.isUse = true
     and BN.isDel = 0  -- 선택 삭제가 되지 않은 애들
-    and BC.uid =  1 -- 카테고리
-    and BN.subject like '%이용%'
-    and date_format(BN.createdAt,'%Y-%m-%d')  Between date_format('2024-03-01','%Y-%m-%d')  and date_format('2024-04-16','%Y-%m-%d')
-limit 1 offset 1 ;  -- limit perpage  offset page
+    and BN.boardCategoryUid =  1; -- 카테고리
+--    and BN.subject like '%이용%'
+--     and date_format(BN.createdAt,'%Y-%m-%d')  Between date_format('2024-03-01','%Y-%m-%d')  and date_format('2024-04-16','%Y-%m-%d')
+-- limit 1 offset 1 ;  -- limit perpage  offset page
 
 
 -- 2. 사용 , 미사용 상태 변경 쿼리
@@ -188,6 +164,7 @@ from BoardContactUs;
 --  작성자  : 관리자 이름 , seq -> 관리자 시퀀스 -> 관리자 로그인한 사람 : 2024052215443011200000002 , name : 관리자 이름 , 이메일, 핸드폰
 -- depth 1 에만 해당 되는 내용, depth = 1 은 답변, ownerUid = 게시물의  uid
 -- 관리자 name 가져 오는 부분 select 하는거
+-- 이렇게 join 걸지 말기 . !!!!
 select
     BU1.uid,
     BU2.ownerUid,
@@ -201,7 +178,7 @@ where BU1.seqUser = '2024060516125675900000029';
 
 
 -- 13. 문의 내역 답변 수정
-
+-- 이렇게 join  걸지 말기 !!!
 update BoardContactUs as BU1
 join BoardContactUs as BU2 on BU1.uid = BU2.ownerUid
 set BU2.subject = '답변 수정 test' ,
@@ -256,12 +233,6 @@ INSERT INTO AdminPasswordHistory
 values ( '2024052215443011200000002','2024052215443011200000002', '9e4294f51f9fe0fa4809afb18f1f4d3d6f6474ef9a5e3392add24e3d9cae6d2d', '127.0.0.1',NOW(),NOW()),
        ( '2024052215443011200000001','2024052215443011200000001', 'a69343ac7ef586435f708c4fc0a0d5d84386d5f5cc5663004169452c8d1cf057', '127.0.0.1',NOW(),NOW());
 
-
-
---
-
-select *
-from AdminUser;
 
 
 
