@@ -189,6 +189,8 @@ from BoardContactUs;
 -- depth 1 에만 해당 되는 내용, depth = 1 은 답변, ownerUid = 게시물의  uid
 -- 관리자 name 가져 오는 부분 select 하는거
 select
+    BU1.uid,
+    BU2.ownerUid,
     BU1.subject ,
     BU1.contents,
     BU2.subject,
@@ -200,9 +202,11 @@ where BU1.seqUser = '2024060516125675900000029';
 
 -- 13. 문의 내역 답변 수정
 
-
-
-
+update BoardContactUs as BU1
+join BoardContactUs as BU2 on BU1.uid = BU2.ownerUid
+set BU2.subject = '답변 수정 test' ,
+    BU2.contents = '답변 수정 contents '
+where BU1.uid = 13;
 
 -- 14. 문의 내역 답변 등록
 INSERT INTO BoardContactUs
