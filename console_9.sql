@@ -543,7 +543,7 @@ from GroupItem;
 select *
 from GroupItemGoods;
 
-
+----
 select *
 from GroupTheme;
 
@@ -553,6 +553,128 @@ from GroupThemeBrand;
 
 select *
 from GroupThemeBrandGoods;
+
+
+
+-- 추천 상품 관리, Best 상품 관리 , 인기 상품 관리
+-- 그룹 명, 전시 상태, 해당 그룹의 상품 추가, 상품 선택(팝업은 이미 작성 됨), 삭제
+-- brand를 따로 빼서 조인 하지 않으려고 category에 key를 넣었다.
+select *
+from Goods;
+
+select *
+from GroupItem;
+
+select *
+from GroupItemGoods;
+
+select
+    g.seq,
+    g.name,
+    gig.seqGoods
+from GroupItem as gi
+left join GroupItemGoods as gig on gi.uid = gig.uid
+left join Goods as g on gig.seqGoods = g.seq;
+
+/**
+  추천 상품 관리
+  */
+-- 추천 상품 관리 조건 조회 , 그룹명, 상품명, 상태값
+select
+    gi.isUse,
+    gi.subject,
+    gi.isDel,
+    gig.uid,
+    gi.type,
+    group_concat(g.name) as name
+from GroupItem as gi
+left join GroupItemGoods as gig on gi.uid = gig.uid
+left join Goods as g on gig.seqGoods = g.seq
+where
+    gi.isDel  = false
+    -- gi.subject like '%추천%' and
+    -- name like '%아메리카노%' and
+    -- gi.isUse = 1
+group by subject;
+
+-- 수정 : 그룹 전시 상태 수정
+update GroupItem
+set isUse = true
+where uid = 1;
+
+-- [새 그룹 등록 팝업] 새 그룹 등록
+-- default -> order :1 , type: 추천 상품
+-- 새 그룹 명 체크
+
+
+
+    select *
+    from GroupItem;
+
+    select *
+    from GroupItemGoods;
+
+
+
+
+
+-- [수정 팝업] [상품 추가 팝업] [그룹 상품 추가 팝업] : 브랜드, 상품명
+select
+    g.seq,
+    c.name,
+    g.name
+from Goods as g
+left join Category as c on g.seqCategoryBrand = c.seq
+where
+    g.isDel = false
+  and c.name like '%스%' -- 브랜드 명
+  and g.name like '%아메%'; -- 상품명
+
+-- [수정 팝업] 상품관리 조회
+select
+    gig.uid,
+    g.seq,
+    c.name,
+    g.name,
+    g.isUse,
+    gig.isDel
+from GroupItemGoods as gig
+left join Goods as g on gig.seqGoods = g.seq
+left join Category as c on g.seqCategoryBrand = c.seq
+where gig.uid = 1  and g.isUse = true;
+
+-- [수정 팝업] 상품에 대한 선택 삭제
+update GroupItemGoods
+set isDel = false
+where seqGoods in ( '2024041912000011100000002');
+
+
+
+-- [수정 팝업] 상품 추가
+
+
+-- [수정 팝업] 선택 삭제
+
+
+
+-- [수정 팝업] 상품 추가 사용 여부 수정
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
